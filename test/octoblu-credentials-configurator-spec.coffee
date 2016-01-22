@@ -34,7 +34,7 @@ describe 'OctobluCredentialsConfigurator', ->
             ]
 
       it 'should return the message', ->
-        expect(@result.channelConfig).to.deep.equal
+        expect(@result).to.deep.equal
           type:'channel:weather'
           headerParams: {}
           urlParams: {}

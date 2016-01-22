@@ -45,6 +45,6 @@ class OctobluCredentialsConfigurator extends ReturnValue
     channelConfig.oauth.secret ?= channelConfig.oauth.clientSecret
     channelConfig.oauth.secret ?= channelConfig.oauth.consumerSecret
 
-    return JSON.parse JSON.stringify channelConfig: channelConfig # removes things that are undefined
+    return JSON.parse JSON.stringify channelConfig # removes things that are undefined
 
 module.exports = OctobluCredentialsConfigurator
