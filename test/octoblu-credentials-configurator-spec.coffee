@@ -14,24 +14,26 @@ describe 'OctobluCredentialsConfigurator', ->
         @result = @sut.onEnvelope
           config:
             channelApiMatch: require './weather.json'
-            template:
-              type: 'channel:weather'
-              headerParams: {}
-              urlParams: {}
-              queryParams:
-                city: 'Tempe'
-                state: 'AZ'
-              bodyParams: {}
-              url: 'http://weather.octoblu.com/temperature/fahrenheit'
-              method: 'GET'
-          data:
-            userApis: [
-              authtype: 'none'
-              channelid: '5337a38d76a65b9693bc2a9f'
-              _id: '569fc2fd0c626601000186ee'
-              type: 'channel:weather'
-              uuid: 'channel-weather-uuid'
-            ]
+            type: 'channel:weather'
+            headerParams: {}
+            urlParams: {}
+            queryParams:
+              city: 'Tempe'
+              state: 'AZ'
+            bodyParams: {}
+            url: 'http://weather.octoblu.com/temperature/fahrenheit'
+            method: 'GET'
+            oauth:
+              tokenMethod:'none'
+          message:
+            payload:
+              userApis: [
+                authtype: 'none'
+                channelid: '5337a38d76a65b9693bc2a9f'
+                _id: '569fc2fd0c626601000186ee'
+                type: 'channel:weather'
+                uuid: 'channel-weather-uuid'
+              ]
 
       it 'should return the message', ->
         expect(@result).to.deep.equal
@@ -52,18 +54,17 @@ describe 'OctobluCredentialsConfigurator', ->
         @result = @sut.onEnvelope
           config:
             channelApiMatch: null
-            template:
-              type: 'channel:weather'
-          data:
-            userApis: [
-              authtype: 'none'
-              channelid: '5337a38d76a65b9693bc2a9f'
-              _id: '569fc2fd0c626601000186ee'
-              type: 'channel:weather'
-              uuid: 'channel-weather-uuid'
-            ]
+          message:
+            payload:
+              userApis: [
+                authtype: 'none'
+                channelid: '5337a38d76a65b9693bc2a9f'
+                _id: '569fc2fd0c626601000186ee'
+                type: 'channel:weather'
+                uuid: 'channel-weather-uuid'
+              ]
 
-      it 'should return the message', ->
+      it 'should return an empty object', ->
         expect(@result).to.deep.equal {}
 
     describe 'when called with no userApiMatch', ->
@@ -71,10 +72,43 @@ describe 'OctobluCredentialsConfigurator', ->
         @result = @sut.onEnvelope
           config:
             channelApiMatch: null
-            template:
-              type: 'channel:weather'
-          data:
-            userApis: []
+          message:
+            payload:
+              userApis: []
 
-      it 'should return the message', ->
+      it 'should return an empty object', ->
+        expect(@result).to.deep.equal {}
+
+    describe 'when called there is no payload', ->
+      beforeEach ->
+        @result = @sut.onEnvelope
+          config:
+            channelApiMatch: null
+          message: {}
+
+      it 'should return an empty object', ->
+        expect(@result).to.deep.equal {}
+
+    describe 'when called there payload is null', ->
+      beforeEach ->
+        @result = @sut.onEnvelope
+          config:
+            channelApiMatch: null
+          message:
+            payload: null
+
+      it 'should return an empty object', ->
+        expect(@result).to.deep.equal {}
+
+    describe 'when called there is no type config', ->
+      beforeEach ->
+        @result = @sut.onEnvelope
+          config:
+            channelApiMatch:
+              something: true
+            type: null
+          message:
+            payload: null
+
+      it 'should return an empty object', ->
         expect(@result).to.deep.equal {}

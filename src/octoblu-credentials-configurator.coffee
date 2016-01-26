@@ -2,9 +2,13 @@ _           = require 'lodash'
 ReturnValue = require 'nanocyte-component-return-value'
 
 class OctobluCredentialsConfigurator extends ReturnValue
-  onEnvelope: ({config, data}) =>
-    {template,channelApiMatch} = config
-    userApiMatch = _.find data.userApis, type: template.type
+  onEnvelope: ({config, data, message}) =>
+    return {} unless message?.payload?
+
+    {channelApiMatch} = config
+    {userApis} = message.payload
+    userApiMatch = _.find userApis, type: config.type
+
     return {} unless userApiMatch?
     return {} unless channelApiMatch?
     channelConfig = _.pick channelApiMatch,
@@ -15,7 +19,8 @@ class OctobluCredentialsConfigurator extends ReturnValue
       'auth_header_key'
       'bodyParams'
 
-    channelConfig = _.defaults {}, template, channelConfig
+    delete config.channelApiMatch
+    channelConfig = _.defaults {}, config, channelConfig
 
     channelConfig.apikey = userApiMatch.apikey
 
@@ -34,10 +39,10 @@ class OctobluCredentialsConfigurator extends ReturnValue
     channelOauth ?= channelApiMatch.oauth
     channelOauth ?= tokenMethod: channelApiMatch.auth_strategy
 
-    channelConfig.oauth = _.defaults {}, userOAuth, template.oauth, channelOauth
+    channelConfig.oauth = _.defaults {}, userOAuth, config.oauth, channelOauth
 
     if channelApiMatch.overrides
-      channelConfig.headerParams = _.extend {}, template.headerParams, channelApiMatch.overrides.headerParams
+      channelConfig.headerParams = _.extend {}, config.headerParams, channelApiMatch.overrides.headerParams
 
     channelConfig.oauth.key ?= channelConfig.oauth.clientID
     channelConfig.oauth.key ?= channelConfig.oauth.consumerKey
