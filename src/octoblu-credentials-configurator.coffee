@@ -3,10 +3,9 @@ ReturnValue = require 'nanocyte-component-return-value'
 
 class OctobluCredentialsConfigurator extends ReturnValue
   onEnvelope: ({config, data, message}) =>
-    return {} unless message?.payload?
 
     {channelApiMatch} = config
-    {userApis} = message.payload
+    {userApis} = message
     userApiMatch = _.find userApis, type: config.type
 
     return {} unless userApiMatch?
