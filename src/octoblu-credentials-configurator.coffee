@@ -2,10 +2,11 @@ _           = require 'lodash'
 ReturnValue = require 'nanocyte-component-return-value'
 
 class OctobluCredentialsConfigurator extends ReturnValue
-  onEnvelope: ({config, data, message}) =>
-
+  onEnvelope: ({data, message}) =>
+    {userApis,transactionId} = message
+    return {} unless data[transactionId]?
+    config = data[transactionId]
     {channelApiMatch} = config
-    {userApis} = message
     userApiMatch = _.find userApis, type: config.type
 
     return {} unless userApiMatch?

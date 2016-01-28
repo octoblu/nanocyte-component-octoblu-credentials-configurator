@@ -12,21 +12,23 @@ describe 'OctobluCredentialsConfigurator', ->
     describe 'when called with an envelope', ->
       beforeEach ->
         @result = @sut.onEnvelope
-          config:
-            channelApiMatch: require './weather.json'
-            type: 'channel:weather'
-            headerParams: {}
-            urlParams: {}
-            queryParams:
-              city: 'Tempe'
-              state: 'AZ'
-            bodyParams:
-              something: true
-            url: 'http://weather.octoblu.com/temperature/fahrenheit'
-            method: 'GET'
-            oauth:
-              tokenMethod:'none'
+          data:
+            'hello-transaction':
+              channelApiMatch: require './weather.json'
+              type: 'channel:weather'
+              headerParams: {}
+              urlParams: {}
+              queryParams:
+                city: 'Tempe'
+                state: 'AZ'
+              bodyParams:
+                something: true
+              url: 'http://weather.octoblu.com/temperature/fahrenheit'
+              method: 'GET'
+              oauth:
+                tokenMethod:'none'
           message:
+            transactionId: 'hello-transaction'
             userApis: [
               authtype: 'none'
               channelid: '5337a38d76a65b9693bc2a9f'
@@ -53,8 +55,9 @@ describe 'OctobluCredentialsConfigurator', ->
     describe 'when called with no channelApiMatch', ->
       beforeEach ->
         @result = @sut.onEnvelope
-          config:
-            channelApiMatch: null
+          data:
+            'hello-transaction':
+              channelApiMatch: null
           message:
             userApis: [
               authtype: 'none'
@@ -70,10 +73,11 @@ describe 'OctobluCredentialsConfigurator', ->
     describe 'when called with no userApiMatch', ->
       beforeEach ->
         @result = @sut.onEnvelope
-          config:
-            channelApiMatch: null
+          data:
+            'hello-transaction':
+              channelApiMatch: null
           message:
-              userApis: []
+            userApis: []
 
       it 'should return an empty object', ->
         expect(@result).to.deep.equal {}
@@ -81,12 +85,35 @@ describe 'OctobluCredentialsConfigurator', ->
     describe 'when called there is no type config', ->
       beforeEach ->
         @result = @sut.onEnvelope
-          config:
-            channelApiMatch:
+          data:
+            'hello-transaction':
+              channelApiMatch: {}
               something: true
             type: null
           message:
-            payload: null
+            transactionId: 'hello-transaction'
+
+      it 'should return an empty object', ->
+        expect(@result).to.deep.equal {}
+
+    describe 'when called there is no data transactionId', ->
+      beforeEach ->
+        @result = @sut.onEnvelope
+          data:
+            type: 'something'
+          message:
+            transactionId: 'hello-transaction'
+
+      it 'should return an empty object', ->
+        expect(@result).to.deep.equal {}
+
+    describe 'when called there is no transactionId', ->
+      beforeEach ->
+        @result = @sut.onEnvelope
+          data:
+            type: 'something'
+          message:
+            transactionId: null
 
       it 'should return an empty object', ->
         expect(@result).to.deep.equal {}
