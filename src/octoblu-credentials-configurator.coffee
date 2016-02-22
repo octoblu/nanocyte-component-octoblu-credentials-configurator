@@ -34,7 +34,7 @@ class OctobluCredentialsConfigurator extends ReturnValue
       defaultParams: userApiMatch.defaultParams
 
     channelConfig.defaultParams = userApiMatch.defaultParams
-    channelConfig.defaultHeaderParams = userApiMatch.defaultHeaderParams || {}
+    channelConfig.defaultHeaderParams = userApiMatch.defaultHeaderParams if userApiMatch.defaultHeaderParams?
 
     channelOauth =  channelApiMatch.oauth?[process.env.NODE_ENV]
     channelOauth ?= channelApiMatch.oauth
