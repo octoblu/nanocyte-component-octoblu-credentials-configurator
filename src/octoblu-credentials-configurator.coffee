@@ -1,13 +1,16 @@
 _           = require 'lodash'
 ReturnValue = require 'nanocyte-component-return-value'
+debug       = require('debug')('nanocyte-component-octoblu-credentials-configurator')
 
 class OctobluCredentialsConfigurator extends ReturnValue
   onEnvelope: ({data, message}) =>
     {userApis,transactionId} = message
+    debug 'transaction exists?', data[transactionId]?
     return {} unless data[transactionId]?
     config = data[transactionId]
     {channelApiMatch} = config
     userApiMatch = _.find userApis, type: config.type
+    debug 'userApiMatch', JSON.stringify(userApiMatch)
 
     return {} unless userApiMatch?
     return {} unless channelApiMatch?
@@ -52,6 +55,8 @@ class OctobluCredentialsConfigurator extends ReturnValue
     channelConfig.oauth.secret ?= channelConfig.oauth.clientSecret
     channelConfig.oauth.secret ?= channelConfig.oauth.consumerSecret
 
-    return JSON.parse JSON.stringify channelConfig # removes things that are undefined
+    config = JSON.parse JSON.stringify channelConfig # removes things that are undefined
+    debug 'sending', config
+    return config
 
 module.exports = OctobluCredentialsConfigurator
