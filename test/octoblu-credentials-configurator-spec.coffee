@@ -39,6 +39,7 @@ describe 'OctobluCredentialsConfigurator', ->
 
       it 'should return the message', ->
         expect(@result).to.deep.equal
+          transactionId: 'hello-transaction'
           type:'channel:weather'
           headerParams: {}
           urlParams: {}
@@ -59,6 +60,7 @@ describe 'OctobluCredentialsConfigurator', ->
             'hello-transaction':
               channelApiMatch: null
           message:
+            transactionId: 'hello-transaction'
             userApis: [
               authtype: 'none'
               channelid: '5337a38d76a65b9693bc2a9f'
@@ -67,8 +69,8 @@ describe 'OctobluCredentialsConfigurator', ->
               uuid: 'channel-weather-uuid'
             ]
 
-      it 'should return an empty object', ->
-        expect(@result).to.deep.equal {}
+      it 'should return just the transaction', ->
+        expect(@result).to.deep.equal transactionId: 'hello-transaction'
 
     describe 'when called with no userApiMatch', ->
       beforeEach ->
@@ -77,10 +79,11 @@ describe 'OctobluCredentialsConfigurator', ->
             'hello-transaction':
               channelApiMatch: null
           message:
+            transactionId: 'hello-transaction'
             userApis: []
 
-      it 'should return an empty object', ->
-        expect(@result).to.deep.equal {}
+      it 'should return just the transaction', ->
+        expect(@result).to.deep.equal transactionId: 'hello-transaction'
 
     describe 'when called there is no type config', ->
       beforeEach ->
@@ -93,8 +96,8 @@ describe 'OctobluCredentialsConfigurator', ->
           message:
             transactionId: 'hello-transaction'
 
-      it 'should return an empty object', ->
-        expect(@result).to.deep.equal {}
+      it 'should return just the transaction', ->
+        expect(@result).to.deep.equal transactionId: 'hello-transaction'
 
     describe 'when called there is no data transactionId', ->
       beforeEach ->
@@ -104,8 +107,8 @@ describe 'OctobluCredentialsConfigurator', ->
           message:
             transactionId: 'hello-transaction'
 
-      it 'should return an empty object', ->
-        expect(@result).to.deep.equal {}
+      it 'should return just the transactionId', ->
+        expect(@result).to.deep.equal transactionId: 'hello-transaction'
 
     describe 'when called there is no transactionId', ->
       beforeEach ->
@@ -115,5 +118,5 @@ describe 'OctobluCredentialsConfigurator', ->
           message:
             transactionId: null
 
-      it 'should return an empty object', ->
-        expect(@result).to.deep.equal {}
+      it 'should return just the transactionId', ->
+        expect(@result).to.deep.equal transactionId: null

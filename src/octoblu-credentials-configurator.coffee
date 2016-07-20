@@ -6,14 +6,14 @@ class OctobluCredentialsConfigurator extends ReturnValue
   onEnvelope: ({data, message}) =>
     {userApis,transactionId} = message
     debug 'transaction exists?', data[transactionId]?
-    return {} unless data[transactionId]?
+    return {transactionId} unless data[transactionId]?
     config = data[transactionId]
     {channelApiMatch} = config
     userApiMatch = _.find userApis, type: config.type
     debug 'userApiMatch', JSON.stringify(userApiMatch)
 
-    return {} unless userApiMatch?
-    return {} unless channelApiMatch?
+    return {transactionId} unless userApiMatch?
+    return {transactionId} unless channelApiMatch?
     channelConfig = _.pick channelApiMatch,
       'bodyFormat'
       'followAllRedirects'
@@ -54,6 +54,7 @@ class OctobluCredentialsConfigurator extends ReturnValue
 
     channelConfig.oauth.secret ?= channelConfig.oauth.clientSecret
     channelConfig.oauth.secret ?= channelConfig.oauth.consumerSecret
+    channelConfig.transactionId = transactionId # pass through to be removed later
 
     config = JSON.parse JSON.stringify channelConfig # removes things that are undefined
     debug 'sending', config
